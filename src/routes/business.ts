@@ -20,7 +20,7 @@ business.get('/findBusiness/:email', async (c) => {
 
 		const collection = mongoClient
 			.db('users')
-			.collection<BusinessDB>('entrepreneur');
+			.collection<BusinessDB>('business');
 		//falta poner que busque es por el negocio, no por el name
 		const result = await collection.findOne({ email: email });
 
