@@ -70,7 +70,7 @@ business.get('/product/:productId', async (c) => {
 		//falta poner que busque es por el negocio, no por el name
 		let o_Id = new ObjectId(productId);
 		const result = await collection.findOne({ _id: o_Id });
-		console.log(result);
+
 		return c.json(result);
 	} catch (error) {
 		console.log(error);
@@ -133,7 +133,6 @@ business
 			let mongoClient = user.mongoClient('mongodb-atlas');
 
 			const body: { productId: string } = await c.req.json();
-			console.log(body.productId);
 
 			const collection = mongoClient
 				.db('users')
@@ -141,8 +140,6 @@ business
 			//falta poner que busque es por el negocio, no por el name
 			let o_Id = new ObjectId(body.productId);
 			const result = await collection.deleteOne({ _id: o_Id });
-
-			console.log(result);
 
 			return new Response('product updated', {
 				status: 200,
@@ -155,4 +152,53 @@ business
 		}
 	});
 
+business.get('/:id/orders', async (c) => {
+	try {
+		const id = c.req.param('id');
+		RealmApp = RealmApp || new Realm.App(c.env.MONGO_DB_APP_ID);
+
+		const credentials = Realm.Credentials.apiKey(c.env.MONGO_DB_API_KEY);
+
+		//duda
+		let user = await RealmApp.logIn(credentials);
+		let mongoClient = user.mongoClient('mongodb-atlas');
+
+		const collection = mongoClient.db('users').collection('businessOrder');
+		//falta poner que busque es por el negocio, no por el name
+		const result = await collection.find({ idBusiness: id });
+
+		return c.json(result);
+	} catch (error) {
+		console.log(error);
+		return new Response(JSON.stringify((error as Error).message), {
+			status: 500,
+		});
+	}
+});
+
+business.get('/:id/order/:idOrder', async (c) => {
+	try {
+		const idOrder = c.req.param('idOrder');
+
+		RealmApp = RealmApp || new Realm.App(c.env.MONGO_DB_APP_ID);
+
+		const credentials = Realm.Credentials.apiKey(c.env.MONGO_DB_API_KEY);
+
+		//duda
+		let user = await RealmApp.logIn(credentials);
+		let mongoClient = user.mongoClient('mongodb-atlas');
+
+		const collection = mongoClient.db('users').collection('businessOrder');
+		//falta poner que busque es por el negocio, no por el name
+		const o_Id = new ObjectId(idOrder);
+		const result = await collection.findOne({ _id: o_Id });
+
+		return c.json(result);
+	} catch (error) {
+		console.log(error);
+		return new Response(JSON.stringify((error as Error).message), {
+			status: 500,
+		});
+	}
+});
 export default business;
