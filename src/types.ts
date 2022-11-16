@@ -14,7 +14,7 @@ export interface Todo extends Document {
 }
 
 export interface BusinessInfo {
-    firstName: string;
+	firstName: string;
 	secondName?: string;
 	firstLastName: string;
 	secondLastName?: string;
@@ -24,6 +24,19 @@ export interface BusinessInfo {
 	ID: string;
 	businessType: string;
 	businessName: string;
+}
+
+export interface ProductUpdatableFields {
+	name: string;
+	price: number;
+	description: string;
+	image: string;
+	stock: number;
+}
+
+export interface UpdateProductBody {
+	id: string;
+	data: ProductUpdatableFields;
 }
 
 export interface BusinessDB extends Document {
@@ -38,3 +51,20 @@ export interface BusinessDB extends Document {
 	businessType: string;
 	businessName: string;
 }
+
+interface ProductVariant {
+	type: string;
+	value: string;
+}
+export interface Product {
+	name: string;
+	characteristics: ProductVariant[];
+	description: string;
+	idBusiness: string;
+	businessType: string;
+	image: string;
+	price: number | string;
+	stock?: number;
+}
+
+export interface ProductDB extends Document {}
