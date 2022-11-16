@@ -8,7 +8,7 @@ app.use(
 	'/*',
 	cors({
 		origin: '*',
-		allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS'],
+		allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'],
 	})
 );
 app.route('/business', business);

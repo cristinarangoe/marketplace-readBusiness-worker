@@ -121,4 +121,38 @@ business
 		}
 	});
 
+business
+	.options('/product/delete', async (c) => console.log(c.req.header))
+	.delete(async (c) => {
+		try {
+			RealmApp = RealmApp || new Realm.App(c.env.MONGO_DB_APP_ID);
+
+			const credentials = Realm.Credentials.apiKey(c.env.MONGO_DB_API_KEY);
+
+			let user = await RealmApp.logIn(credentials);
+			let mongoClient = user.mongoClient('mongodb-atlas');
+
+			const body: { productId: string } = await c.req.json();
+			console.log(body.productId);
+
+			const collection = mongoClient
+				.db('users')
+				.collection<ProductDB>('Products');
+			//falta poner que busque es por el negocio, no por el name
+			let o_Id = new ObjectId(body.productId);
+			const result = await collection.deleteOne({ _id: o_Id });
+
+			console.log(result);
+
+			return new Response('product updated', {
+				status: 200,
+			});
+		} catch (error) {
+			console.log(error);
+			return new Response(JSON.stringify((error as Error).message), {
+				status: 500,
+			});
+		}
+	});
+
 export default business;
